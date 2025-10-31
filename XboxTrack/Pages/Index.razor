@@ -1,0 +1,57 @@
+﻿@page "/"
+
+@using XboxTrack.Components
+
+@inject PageIndexViewModel ViewModel
+
+<CascadingValue TValue="PageIndexViewModel" Value="ViewModel">
+    <PageTitle>Xbox Purchases</PageTitle>
+
+    <MudOverlay @bind-Visible="ViewModel.IsLoading" DarkBackground="true" ZIndex="9999" AutoClose="true"/>
+    
+    <MudFileUpload T="IBrowserFile" Accept=".zip" FilesChanged="UploadFile" MaximumFileCount="100">
+        <ActivatorContent>
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.CloudUpload">
+                Upload Info Pack
+            </MudButton>    
+        </ActivatorContent>
+    </MudFileUpload>
+
+    <GridPurchase/>
+</CascadingValue>
+
+@code
+{
+    private void HandleViewModelChange() => StateHasChanged();
+    
+    protected override void OnInitialized()
+    {
+        ViewModel.OnChange += HandleViewModelChange;
+    }
+
+    public void Dispose()
+    {
+        ViewModel.OnChange -= HandleViewModelChange;
+    }
+    
+    private async Task UploadFile(IBrowserFile? file)
+    {
+        if (file is null)
+        {
+            return;
+        }
+
+        // Read the ZIP file
+        using var memoryStream = new MemoryStream();
+        
+        await file
+            .OpenReadStream(maxAllowedSize: 100 * 1024 * 1024) // 100 MB Max
+            .CopyToAsync(memoryStream);
+
+        memoryStream.Position = 0;
+
+        await ViewModel.GetPurchaseItems(memoryStream);
+    }
+}

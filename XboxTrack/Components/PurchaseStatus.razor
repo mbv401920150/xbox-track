@@ -1,0 +1,24 @@
+﻿<MudChip T="string" Color="@StatusColor">@Status</MudChip>
+
+@code {
+
+    [Parameter]
+    public required string Status { get; set; }
+
+    private Color StatusColor
+    {
+        get
+        {
+            return Status switch
+            {
+                "Completed" => Color.Info,
+                "Redeemed" => Color.Info,
+                "GiftRedeemed" => Color.Info,
+                "Canceled" => Color.Warning,
+                "Refunded" => Color.Warning,
+                _ => Color.Default
+            };
+        }
+    }
+
+}

@@ -1,0 +1,163 @@
+﻿@using System.Globalization
+@inject IClipboardService ClipboardService
+
+<MudPaper Class="always-on-top ">
+    <MudTextField
+        T="string"
+        @bind-Value="SearchString"
+        Class="mx-2 pa-2"
+        Immediate="true"
+        IconSize="Size.Medium"
+        AdornmentIcon="@Icons.Material.Filled.Search"
+        Adornment="Adornment.Start"
+        Placeholder="Search"/>
+</MudPaper>
+
+<MudDataGrid
+    @ref="Grid"
+    Items="@ViewModel.PurchaseHistory"
+    Filterable="true"
+    FilterMode="DataGridFilterMode.Simple"
+    QuickFilter="@QuickFilter"
+    Striped="true"
+    Dense="true"
+    RowClass="align-top-left"
+    Virtualize="true"
+    OverscanCount="5"
+    Loading="ViewModel.IsLoading"
+    RowsPerPage="50">
+
+    <LoadingContent>
+        Loading...
+    </LoadingContent>
+
+    <ToolBarContent>
+        <img style="width: 128px" alt="xbox logo" src="./xbox-logo.svg"/>
+    </ToolBarContent>
+    <Columns>
+        <TemplateColumn Title="Details" Sortable="false" CellClass="d-flex flex-column align-center"
+                        CellStyle="min-height: 195px;">
+            <CellTemplate>
+                <MudImage Src="@context.Item.LinkImage" Elevation="25" Class="image-size rounded-lg"/>
+                <PurchaseStatus Status="@context.Item.Status"/>
+                <div>
+                    <MudChip Size="Size.Small" Color="Color.Default">@context.Item.User</MudChip>
+
+                    <MudTooltip Text="@context.Item.ProductId">
+                        <MudAvatar @onclick="() => CopyToClipboard(context.Item.ProductId)" Color="@Color.Primary"
+                                   Variant="Variant.Outlined" Size="Size.Small">
+                            @context.Item.ProductId[..2]
+                        </MudAvatar>
+                    </MudTooltip>
+
+                    <MudLink
+                        Href="@context.Item.Link"
+                        Disabled="@string.IsNullOrWhiteSpace(context.Item.Link)"
+                        Target="_blank">
+                        <MudIconButton Size="Size.Small"
+                                       Color="@(string.IsNullOrWhiteSpace(context.Item.Link) ? Color.Dark : Color.Primary)"
+                                       Icon="@Icons.Material.Filled.InsertLink"/>
+                    </MudLink>
+
+                    <MudIconButton
+                        @onclick="() => FilterByCode(context.Item.ProductId)"
+                        Size="Size.Small"
+                        Color="@Color.Primary"
+                        Icon="@Icons.Material.Filled.Search"/>
+                </div>
+            </CellTemplate>
+        </TemplateColumn>
+        <PropertyColumn Property="x => x.Description">
+            <CellTemplate>
+                @context.Item.Description
+
+                @if (context.Item.ItemsInPack is not null && context.Item.ItemsInPack.Any())
+                {
+                    @foreach (var item in context.Item.ItemsInPack)
+                    {
+                        <div>
+                            <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.ChevronRight"/>
+                            <MudText Typo="Typo.caption">@item </MudText>
+                        </div>
+                    }
+                }
+            </CellTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.Type">
+            <CellTemplate>
+                <MudChip Color="Color.Default">
+                    @context.Item.Type
+                </MudChip>
+            </CellTemplate>
+        </PropertyColumn>
+
+        <PropertyColumn Property="x => x.Price" CellClass="align-right" Title="Price">
+            <CellTemplate>
+                @($"{context.Item.Price:N2} {context.Item.Currency}")
+            </CellTemplate>
+        </PropertyColumn>
+        <PropertyColumn Property="x => x.UsdPrice" CellClass="align-right" Title="USD Price" Format="N2"/>
+        <PropertyColumn Property="x => x.Date" Title="Date" Format="MMM dd, yyyy"/>
+        <PropertyColumn Property="x => x.Completed" Title="Completed" Hidden="true"/>
+        <PropertyColumn Property="x => x.OnGoing" Title="OnGoing" Hidden="true"/>
+    </Columns>
+    <PagerContent>
+        <MudDataGridPager T="XboxPurchaseHistory"/>
+    </PagerContent>
+</MudDataGrid>
+
+<style>
+    .align-right {
+        text-align: right;
+    }
+
+    .align-top-left {
+        vertical-align: top;
+        text-align: left;
+    }
+
+    .always-on-top {
+        position: fixed;
+        top: 0;
+        right: 0;
+        z-index: 9999;
+        border: 1px solid rgba(0, 0, 0, 0.21);
+    }
+
+    .image-size {
+        height: 150px !important;
+        width: 150px !important;
+    }
+</style>
+
+@code {
+    [CascadingParameter] public required PageIndexViewModel ViewModel { get; set; }
+    
+    private MudDataGrid<XboxPurchaseHistory> Grid { get; set; } = null!;
+
+    private string? SearchString { get; set; }
+
+    private void CopyToClipboard(string text)
+    {
+        ClipboardService.CopyToClipboard(text);
+    }
+
+    private Func<XboxPurchaseHistory, bool> QuickFilter => x
+        => string.IsNullOrWhiteSpace(SearchString) ||
+           (x.User is not null && x.User.Contains(SearchString, StringComparison.OrdinalIgnoreCase)) ||
+           (x.ProductId is not null && x.ProductId.Contains(SearchString, StringComparison.OrdinalIgnoreCase)) ||
+           (x.Description is not null && x.Description.Contains(SearchString, StringComparison.OrdinalIgnoreCase)) ||
+           (x.Type is not null && x.Type.Contains(SearchString, StringComparison.OrdinalIgnoreCase)) ||
+           x.Price.ToString(CultureInfo.InvariantCulture).Contains(SearchString, StringComparison.OrdinalIgnoreCase) ||
+           (x.Currency is not null && x.Currency.Contains(SearchString, StringComparison.OrdinalIgnoreCase)) ||
+           x.UsdPrice.ToString(CultureInfo.InvariantCulture).Contains(SearchString, StringComparison.OrdinalIgnoreCase) ||
+           x.Date.ToString(CultureInfo.InvariantCulture).Contains(SearchString, StringComparison.OrdinalIgnoreCase) ||
+           (x.Status is not null && x.Status.Contains(SearchString, StringComparison.OrdinalIgnoreCase)) ||
+           (x.Link is not null && x.Link.Contains(SearchString, StringComparison.OrdinalIgnoreCase)) ||
+           (x.ItemsInPack?.Where(i => i.Contains(SearchString, StringComparison.OrdinalIgnoreCase)).Any() ?? false);
+
+    private void FilterByCode(string code)
+    {
+        SearchString = code;
+    }
+}
