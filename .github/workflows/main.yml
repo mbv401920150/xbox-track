@@ -8,15 +8,15 @@ jobs:
     deploy-to-github-pages:
         runs-on: ubuntu-latest
         steps:
-        - uses: actions/checkout@v4
+        - uses: actions/checkout@v2
 
         - name: Setup .NET Core SDK
-          uses: actions/setup-dotnet@v4
+          uses: actions/setup-dotnet@v3
           with:
             dotnet-version: '9.0.x'
 
-        - name: Publish
-          run: dotnet publish XboxTrack/XboxTrack.csproj -c Release -o release --nologo
+        - name: Publish .NET Project
+          run: dotnet publish ./XboxTrack/XboxTrack.csproj -c Release -o release --nologo
         
         - name: Rewrite base href
           uses: SteveSandersonMS/ghaction-rewrite-base-href@v1.1.0
