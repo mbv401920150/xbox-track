@@ -15,8 +15,8 @@ jobs:
           with:
             dotnet-version: '9.0.x'
 
-        - name: Publish .NET Core Project
-          run: dotnet publish ./XboxTrack/XboxTrack.csproj -c Release -o release --nologo
+        - name: Publish
+          run: dotnet publish XboxTrack/XboxTrack.csproj -c Release -o release --nologo
         
         - name: Rewrite base href
           uses: SteveSandersonMS/ghaction-rewrite-base-href@v1.1.0
