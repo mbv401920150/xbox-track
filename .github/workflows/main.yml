@@ -1,5 +1,8 @@
 name: Deploy Blazor WASM to GitHub Pages
 
+permissions: 
+  contents: write
+  
 on:
     push:
         branches: [master]
