@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "XboxTrack",
   "resources": {
-    "hash": "sha256-wrO0PhSWn5L0QBbzlfqJJzpNCaFP7P6ib+fdu8QCVBk=",
+    "hash": "sha256-+zwevK4zKqjrEBlPYXrsjwIpGb7MbMm6uB4dyW/txls=",
     "fingerprinting": {
       "BlazorPro.BlazorSize.fjkic6tfmp.wasm": "BlazorPro.BlazorSize.wasm",
       "Microsoft.AspNetCore.Components.qu33l8ec7l.wasm": "Microsoft.AspNetCore.Components.wasm",
@@ -49,7 +49,7 @@
       "System.Threading.6wxzpv4ki1.wasm": "System.Threading.wasm",
       "System.8rv0tdtrxz.wasm": "System.wasm",
       "System.Private.CoreLib.gfxovm2dwm.wasm": "System.Private.CoreLib.wasm",
-      "XboxTrack.vb1vh4yb2x.wasm": "XboxTrack.wasm",
+      "XboxTrack.9o7pog1nf9.wasm": "XboxTrack.wasm",
       "dotnet.js": "dotnet.js",
       "dotnet.native.l4ptthxatg.js": "dotnet.native.js",
       "dotnet.native.d2w7colv7e.wasm": "dotnet.native.wasm",
@@ -121,7 +121,7 @@
       "System.Text.RegularExpressions.adthaclmex.wasm": "sha256-7ngUM2YnAdI252+BIWBfKXWhbeKgsoAafOERRMlQXIM=",
       "System.Threading.6wxzpv4ki1.wasm": "sha256-qpTsdttgwFKu3sCPl9Qw0nYZISOGaHpAJFTWUzt9Xzw=",
       "System.8rv0tdtrxz.wasm": "sha256-xMF0eauQ5DkSzUozHLFFMQnL6DSJO09nJLtgag+Dzbw=",
-      "XboxTrack.vb1vh4yb2x.wasm": "sha256-hcYYk31iWmLRSVfgi5xs2GOUHzCpwTnIQrueF5RuKnI="
+      "XboxTrack.9o7pog1nf9.wasm": "sha256-5+SCTNzbw1Gs0G5sqHqg9gK7F1ow+t0GZUqjKV2M5qQ="
     }
   },
   "cacheBootResources": true,
