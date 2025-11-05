@@ -1,110 +1,148 @@
 ﻿@using System.Globalization
+@using XboxTrack.Components.Dialogs
 @inject IClipboardService ClipboardService
+@inject IDialogService DialogService
 
-<MudPaper Class="always-on-top ">
-    <MudTextField
-        T="string"
-        @bind-Value="SearchString"
-        Class="mx-2 pa-2"
-        Immediate="true"
-        IconSize="Size.Medium"
-        AdornmentIcon="@Icons.Material.Filled.Search"
-        Adornment="Adornment.Start"
-        Placeholder="Search"/>
-</MudPaper>
+<MediaQuery Media="(max-width: 650px)" @bind-Matches="_mobileSize"/>
 
-<MudDataGrid
-    @ref="Grid"
-    Items="@ViewModel.PurchaseHistory"
-    Filterable="true"
-    FilterMode="DataGridFilterMode.Simple"
-    QuickFilter="@QuickFilter"
-    Striped="true"
-    Dense="true"
-    RowClass="align-top-left"
-    Virtualize="true"
-    OverscanCount="5"
-    Loading="ViewModel.IsLoading"
-    RowsPerPage="50">
+@if (ViewModel.PurchaseHistory.Any() is false)
+{
+    <MudFileUpload T="IBrowserFile" Accept=".zip" FilesChanged="UploadFile" MaximumFileCount="100">
+        <ActivatorContent>
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       StartIcon="@Icons.Material.Filled.CloudUpload">
+                Upload Info Pack
+            </MudButton>
+        </ActivatorContent>
+    </MudFileUpload>
+}
+else
+{
+    <MudPaper Class=@($"always-on-top {GetSearchInputClass}")>
+        <MudTextField
+            T="string"
+            @bind-Value="SearchString"
+            Class="mx-2 pa-2"
+            Clearable="true"
+            Immediate="true"
+            IconSize="Size.Medium"
+            AdornmentIcon="@Icons.Material.Filled.Search"
+            Adornment="Adornment.Start"
+            Placeholder="Search"/>
+    </MudPaper>
 
-    <LoadingContent>
-        Loading...
-    </LoadingContent>
+    <MudDataGrid
+        @ref="Grid"
+        Items="@ViewModel.PurchaseHistory"
+        Filterable="true"
+        FilterMode="DataGridFilterMode.Simple"
+        QuickFilter="@QuickFilter"
+        Striped="true"
+        Dense="true"
+        RowClass="align-top-left"
+        Virtualize="true"
+        OverscanCount="5"
+        Loading="ViewModel.IsLoading"
+        RowsPerPage="50">
 
-    <ToolBarContent>
-        <img style="width: 128px" alt="xbox logo" src="./xbox-logo.svg"/>
-    </ToolBarContent>
-    <Columns>
-        <TemplateColumn Title="Details" Sortable="false" CellClass="d-flex flex-column align-center"
-                        CellStyle="min-height: 195px;">
-            <CellTemplate>
-                <MudImage Src="@context.Item.LinkImage" Elevation="25" Class="image-size rounded-lg"/>
-                <PurchaseStatus Status="@context.Item.Status"/>
-                <div>
-                    <MudChip Size="Size.Small" Color="Color.Default">@context.Item.User</MudChip>
+        <LoadingContent>
+            Loading...
+        </LoadingContent>
 
-                    <MudTooltip Text="@context.Item.ProductId">
-                        <MudAvatar @onclick="() => CopyToClipboard(context.Item.ProductId)" Color="@Color.Primary"
-                                   Variant="Variant.Outlined" Size="Size.Small">
-                            @context.Item.ProductId[..2]
-                        </MudAvatar>
-                    </MudTooltip>
-
-                    <MudLink
-                        Href="@context.Item.Link"
-                        Disabled="@string.IsNullOrWhiteSpace(context.Item.Link)"
-                        Target="_blank">
-                        <MudIconButton Size="Size.Small"
-                                       Color="@(string.IsNullOrWhiteSpace(context.Item.Link) ? Color.Dark : Color.Primary)"
-                                       Icon="@Icons.Material.Filled.InsertLink"/>
-                    </MudLink>
-
-                    <MudIconButton
-                        @onclick="() => FilterByCode(context.Item.ProductId)"
-                        Size="Size.Small"
-                        Color="@Color.Primary"
-                        Icon="@Icons.Material.Filled.Search"/>
-                </div>
-            </CellTemplate>
-        </TemplateColumn>
-        <PropertyColumn Property="x => x.Description">
-            <CellTemplate>
-                @context.Item.Description
-
-                @if (context.Item.ItemsInPack is not null && context.Item.ItemsInPack.Any())
-                {
-                    @foreach (var item in context.Item.ItemsInPack)
+        <ToolBarContent>
+            <img style="width: 128px" alt="xbox logo" src="./xbox-logo.svg"/>
+        </ToolBarContent>
+        <Columns>
+            <TemplateColumn Title=@GetTitleHeader 
+                            Sortable="false" 
+                            CellClass="d-flex flex-column align-center"
+                            CellStyle="min-height: 195px;">
+                <CellTemplate>
+                    <MudImage Src="@context.Item.LinkImage" 
+                              Elevation="25" 
+                              Class=@($"{GetImageSize} rounded-lg")/>
+                    
+                    @if (_mobileSize is false)
                     {
-                        <div>
-                            <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.ChevronRight"/>
-                            <MudText Typo="Typo.caption">@item </MudText>
-                        </div>
+                        <PurchaseStatus Status="@context.Item.Status"/>
                     }
-                }
-            </CellTemplate>
-        </PropertyColumn>
-        <PropertyColumn Property="x => x.Type">
-            <CellTemplate>
-                <MudChip Color="Color.Default">
-                    @context.Item.Type
-                </MudChip>
-            </CellTemplate>
-        </PropertyColumn>
+                    
+                    <div>
+                        <MudChip Size="Size.Small" Color="Color.Default">@context.Item.User</MudChip>
 
-        <PropertyColumn Property="x => x.Price" CellClass="align-right" Title="Price">
-            <CellTemplate>
-                @($"{context.Item.Price:N2} {context.Item.Currency}")
-            </CellTemplate>
-        </PropertyColumn>
-        <PropertyColumn Property="x => x.UsdPrice" CellClass="align-right" Title="USD Price" Format="N2"/>
-        <PropertyColumn Property="x => x.Date" Title="Date" Format="MMM dd, yyyy"/>
-        <PropertyColumn Property="x => x.Completed" Title="Completed" Hidden="true"/>
-        <PropertyColumn Property="x => x.OnGoing" Title="OnGoing" Hidden="true"/>
-    </Columns>
-    <PagerContent>
-        <MudDataGridPager T="XboxPurchaseHistory"/>
-    </PagerContent>
-</MudDataGrid>
+                        <MudTooltip Text="@context.Item.ProductId">
+                            <MudAvatar @onclick="() => CopyToClipboard(context.Item?.ProductId ?? string.Empty)" Color="@Color.Primary"
+                                       Variant="Variant.Outlined" Size="Size.Small">
+                                @((context.Item?.ProductId ?? "")[..2])
+                            </MudAvatar>
+                        </MudTooltip>
+
+                        <MudLink
+                            Href="@context.Item.Link"
+                            Disabled="@string.IsNullOrWhiteSpace(context.Item.Link)"
+                            Target="_blank">
+                            <MudIconButton Size="Size.Small"
+                                           Color="@(string.IsNullOrWhiteSpace(context.Item.Link) ? Color.Dark : Color.Primary)"
+                                           Icon="@Icons.Material.Filled.InsertLink"/>
+                        </MudLink>
+
+                        <MudIconButton
+                            @onclick="() => FilterByCode(context.Item.ProductId)"
+                            Size="Size.Small"
+                            Color="@Color.Primary"
+                            Icon="@Icons.Material.Filled.Search"/>
+                    </div>
+                </CellTemplate>
+            </TemplateColumn>
+            <PropertyColumn Property="x => x.Description">
+                <CellTemplate>
+                    @context.Item.Description
+
+                    @if (_mobileSize is false && context.Item.ItemsInPack is not null && context.Item.ItemsInPack.Any())
+                    {
+                        @foreach (var item in context.Item.ItemsInPack)
+                        {
+                            <div>
+                                <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.ChevronRight"/>
+                                <MudText Typo="Typo.caption">@item </MudText>
+                            </div>
+                        }
+                    }
+                    else if (_mobileSize)
+                    {
+                        <MudIconButton
+                            @onclick="() => OpenDialog(context.Item)"
+                            Size="Size.Small"
+                            Color="@Color.Primary"
+                            Icon="@Icons.Material.Filled.TextSnippet"/>
+                    }
+                </CellTemplate>
+            </PropertyColumn>
+            @if (_mobileSize is false)
+            {
+                <PropertyColumn Property="x => x.Type">
+                    <CellTemplate>
+                        <MudChip Color="Color.Default">
+                            @context.Item.Type
+                        </MudChip>
+                    </CellTemplate>
+                </PropertyColumn>
+                
+                <PropertyColumn Property="x => x.Price" CellClass="align-right" Title="Price">
+                    <CellTemplate>
+                        @($"{(decimal)context.Item.Price:N2} {(string)context.Item.Currency}")
+                    </CellTemplate>
+                </PropertyColumn>
+            }
+            <PropertyColumn Property="x => x.UsdPrice" CellClass="align-right" Title="USD Price" Format="N2"/>
+            <PropertyColumn Property="x => x.Date" Title="Date" Format="MMM dd, yyyy"/>
+        </Columns>
+        <PagerContent>
+            <MudDataGridPager T="XboxPurchaseHistory"/>
+        </PagerContent>
+    </MudDataGrid>
+}
 
 <style>
     .align-right {
@@ -128,10 +166,25 @@
         height: 150px !important;
         width: 150px !important;
     }
+
+    .image-size-mobile {
+        height: 100px !important;
+        width: 100px !important;
+    }
+    
+    .full-width {
+        width: 100%;
+    }
 </style>
 
 @code {
     [CascadingParameter] public required PageIndexViewModel ViewModel { get; set; }
+
+    private bool _mobileSize;
+
+    private string GetImageSize => _mobileSize ? "image-size-mobile" : "image-size";
+    private string GetSearchInputClass => _mobileSize ? "full-width" : "";
+    private string GetTitleHeader => _mobileSize ? "" : "Details";
     
     private MudDataGrid<XboxPurchaseHistory> Grid { get; set; } = null!;
 
@@ -156,8 +209,52 @@
            (x.Link is not null && x.Link.Contains(SearchString, StringComparison.OrdinalIgnoreCase)) ||
            (x.ItemsInPack?.Where(i => i.Contains(SearchString, StringComparison.OrdinalIgnoreCase)).Any() ?? false);
 
-    private void FilterByCode(string code)
+    private void FilterByCode(string? code)
     {
-        SearchString = code;
+        SearchString = code ?? string.Empty;
+    }
+
+    private async Task UploadFile(IBrowserFile? file)
+    {
+        if (file is null)
+        {
+            return;
+        }
+
+        // Read the ZIP file
+        using var memoryStream = new MemoryStream();
+
+        await file
+            .OpenReadStream(maxAllowedSize: 100 * 1024 * 1024) // 100 MB Max
+            .CopyToAsync(memoryStream);
+
+        memoryStream.Position = 0;
+
+        await ViewModel.GetPurchaseItems(memoryStream);
+    }
+
+    private async Task OpenDialog(XboxPurchaseHistory item)
+    {
+        var parameters = new DialogParameters<GameDescriptionDialog>
+        {
+            {
+                x => x.ItemsInPack, item.ItemsInPack
+            }
+        };
+
+        var options = new DialogOptions 
+        { 
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true
+        };
+
+        var dialog = await DialogService.ShowAsync<GameDescriptionDialog>(
+            item.Description, 
+            parameters, 
+            options
+        );
+        
+        await dialog.Result;
     }
 }
