@@ -1,7 +1,7 @@
 {
   "mainAssemblyName": "XboxTrack",
   "resources": {
-    "hash": "sha256-SGG0UXauBIxmhLww9a4SLtVf/RVtDoL2G/DPYVEUeXc=",
+    "hash": "sha256-wrO0PhSWn5L0QBbzlfqJJzpNCaFP7P6ib+fdu8QCVBk=",
     "fingerprinting": {
       "BlazorPro.BlazorSize.fjkic6tfmp.wasm": "BlazorPro.BlazorSize.wasm",
       "Microsoft.AspNetCore.Components.qu33l8ec7l.wasm": "Microsoft.AspNetCore.Components.wasm",
@@ -41,7 +41,7 @@
       "System.Private.Uri.sk79ksybzi.wasm": "System.Private.Uri.wasm",
       "System.Runtime.InteropServices.JavaScript.lu7n7av6ff.wasm": "System.Runtime.InteropServices.JavaScript.wasm",
       "System.Runtime.Numerics.p310ehtfc1.wasm": "System.Runtime.Numerics.wasm",
-      "System.Runtime.efjp7q1q9j.wasm": "System.Runtime.wasm",
+      "System.Runtime.7punzz650f.wasm": "System.Runtime.wasm",
       "System.Text.Encoding.Extensions.75uivmr71p.wasm": "System.Text.Encoding.Extensions.wasm",
       "System.Text.Encodings.Web.hq94nfnuw2.wasm": "System.Text.Encodings.Web.wasm",
       "System.Text.Json.b94w73oc39.wasm": "System.Text.Json.wasm",
@@ -49,7 +49,7 @@
       "System.Threading.6wxzpv4ki1.wasm": "System.Threading.wasm",
       "System.8rv0tdtrxz.wasm": "System.wasm",
       "System.Private.CoreLib.gfxovm2dwm.wasm": "System.Private.CoreLib.wasm",
-      "XboxTrack.kz6ehya2ze.wasm": "XboxTrack.wasm",
+      "XboxTrack.vb1vh4yb2x.wasm": "XboxTrack.wasm",
       "dotnet.js": "dotnet.js",
       "dotnet.native.l4ptthxatg.js": "dotnet.native.js",
       "dotnet.native.d2w7colv7e.wasm": "dotnet.native.wasm",
@@ -114,14 +114,14 @@
       "System.ObjectModel.va84ad4imx.wasm": "sha256-B2HUdhI15+5EgsVOUBTONE+SiIfDDw8rF8fILqPmGfw=",
       "System.Private.Uri.sk79ksybzi.wasm": "sha256-ZA0HLneK9mWm0xQeHqZznwUi/71uxB2NA80OGbtJGVU=",
       "System.Runtime.Numerics.p310ehtfc1.wasm": "sha256-a7i5HtIwA2r/41q3wPgNPeBEyx1lu7SdAgXPD1QiSnY=",
-      "System.Runtime.efjp7q1q9j.wasm": "sha256-ZjJvYOmIhgyyNUijxNcxQsXrOFi2NewaVNdxw9u88+Y=",
+      "System.Runtime.7punzz650f.wasm": "sha256-Kwo0a3zlbbkzpZWk82vM8JzwBdtD/f4ut7GXGOd5ad4=",
       "System.Text.Encoding.Extensions.75uivmr71p.wasm": "sha256-5Y++7IQlv3nU8g6TlXnuAT7bUkdKlpQajNYc5312Yk8=",
       "System.Text.Encodings.Web.hq94nfnuw2.wasm": "sha256-SQ1+aS+lCxp43qhvbxWS01rhQfbvNeDSN0xyk2P9/Hc=",
       "System.Text.Json.b94w73oc39.wasm": "sha256-j7DlOifpUE4rzEIIs9BkuCowEYEnEOmvJ5KpzdtZRAc=",
       "System.Text.RegularExpressions.adthaclmex.wasm": "sha256-7ngUM2YnAdI252+BIWBfKXWhbeKgsoAafOERRMlQXIM=",
       "System.Threading.6wxzpv4ki1.wasm": "sha256-qpTsdttgwFKu3sCPl9Qw0nYZISOGaHpAJFTWUzt9Xzw=",
       "System.8rv0tdtrxz.wasm": "sha256-xMF0eauQ5DkSzUozHLFFMQnL6DSJO09nJLtgag+Dzbw=",
-      "XboxTrack.kz6ehya2ze.wasm": "sha256-4LMF58jtecwy1Jf4W4hn2cuxQKaBhP4zPiPPFHGaWqM="
+      "XboxTrack.vb1vh4yb2x.wasm": "sha256-hcYYk31iWmLRSVfgi5xs2GOUHzCpwTnIQrueF5RuKnI="
     }
   },
   "cacheBootResources": true,
