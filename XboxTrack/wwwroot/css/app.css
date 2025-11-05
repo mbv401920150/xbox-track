@@ -86,3 +86,8 @@ code {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+
+.mud-list-item-icon
+{
+    min-width: 5px !important;
+}

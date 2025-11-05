@@ -99,26 +99,25 @@ else
                 <CellTemplate>
                     @context.Item.Description
 
-                    @if (_mobileSize is false && context.Item.ItemsInPack is not null && context.Item.ItemsInPack.Any())
+                    @if (context.Item.ItemsInPack is not null && context.Item.ItemsInPack.Any())
                     {
-                        @foreach (var item in context.Item.ItemsInPack)
+                        @if (_mobileSize is false)
                         {
-                            <div>
-                                <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.ChevronRight"/>
-                                <MudText Typo="Typo.caption">@item </MudText>
-                            </div>
+                            <ItemsInPackList ItemsInPack="@context.Item.ItemsInPack"/>
+                        }
+                        else
+                        {
+                            <MudIconButton
+                                @onclick="() => OpenDialog(context.Item)"
+                                Size="Size.Small"
+                                Color="@Color.Primary"
+                                Icon="@Icons.Material.Filled.TextSnippet"/>
                         }
                     }
-                    else if (_mobileSize)
-                    {
-                        <MudIconButton
-                            @onclick="() => OpenDialog(context.Item)"
-                            Size="Size.Small"
-                            Color="@Color.Primary"
-                            Icon="@Icons.Material.Filled.TextSnippet"/>
-                    }
+                    
                 </CellTemplate>
             </PropertyColumn>
+            
             @if (_mobileSize is false)
             {
                 <PropertyColumn Property="x => x.Type">
@@ -131,7 +130,7 @@ else
                 
                 <PropertyColumn Property="x => x.Price" CellClass="align-right" Title="Price">
                     <CellTemplate>
-                        @($"{(decimal)context.Item.Price:N2} {(string)context.Item.Currency}")
+                        @(GetPriceLocalCurrency(context.Item))
                     </CellTemplate>
                 </PropertyColumn>
             }
@@ -185,6 +184,7 @@ else
     private string GetImageSize => _mobileSize ? "image-size-mobile" : "image-size";
     private string GetSearchInputClass => _mobileSize ? "full-width" : "";
     private string GetTitleHeader => _mobileSize ? "" : "Details";
+    private string GetPriceLocalCurrency(XboxPurchaseHistory item) => $"{item.Price:N2} {item.Currency}";
     
     private MudDataGrid<XboxPurchaseHistory> Grid { get; set; } = null!;
 

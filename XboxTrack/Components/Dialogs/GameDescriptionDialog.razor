@@ -1,15 +1,6 @@
 <MudDialog>
     <DialogContent>
-        @if (ItemsInPack is not null)
-        {
-            @foreach (var item in ItemsInPack)
-            {
-                <div>
-                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.ChevronRight"/>
-                    <MudText Typo="Typo.caption">@item </MudText>
-                </div>
-            }
-        }
+        <ItemsInPackList ItemsInPack="ItemsInPack"/>
     </DialogContent>
     
     <DialogActions>

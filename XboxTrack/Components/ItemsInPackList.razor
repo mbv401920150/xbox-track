@@ -1,0 +1,19 @@
+@if (ItemsInPack is not null && ItemsInPack.Any())
+{
+    <MudList T="string"
+             Dense="true"
+             ReadOnly="true">
+        @foreach (var item in ItemsInPack)
+        {
+            <MudListItem Text=@item 
+                         Icon="@Icons.Material.Filled.Check" 
+                         IconSize="Size.Small" 
+                         IconColor="Color.Primary"/>
+        }
+    </MudList>
+}
+
+@code {
+    [Parameter] 
+    public IEnumerable<string>? ItemsInPack { get; set; }
+}
