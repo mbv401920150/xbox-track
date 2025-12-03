@@ -74,7 +74,7 @@ else
                         <MudTooltip Text="@context.Item.ProductId">
                             <MudAvatar @onclick="() => CopyToClipboard(context.Item?.ProductId ?? string.Empty)" Color="@Color.Primary"
                                        Variant="Variant.Outlined" Size="Size.Small">
-                                @((context.Item?.ProductId ?? "")[..2])
+                                @GetAvatarText(context.Item?.ProductId)
                             </MudAvatar>
                         </MudTooltip>
 
@@ -256,5 +256,11 @@ else
         );
         
         await dialog.Result;
+    }
+    
+    private static string GetAvatarText(string? productId)
+    {
+        var text = productId ?? "NA";
+        return text.Length >= 2 ? text[..2] : "NA";
     }
 }
