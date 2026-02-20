@@ -66,6 +66,7 @@ public class XboxPurchaseService : IXboxPurchaseService
 
             var duplicateItems = GeneralHistoryInfo.Where(x =>
                 x.ProductId == productId &&
+                x.Description == gameDescription &&
                 x.User == userName).ToList();
 
             if (duplicateItems.Any())
