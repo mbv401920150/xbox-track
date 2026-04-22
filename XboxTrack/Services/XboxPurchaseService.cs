@@ -177,7 +177,7 @@ public class XboxPurchaseService : IXboxPurchaseService
 
             var duplicateProducts = GeneralHistoryInfo
                 .GroupBy(x => x.ProductId)
-                .Where(x => x.Count() > 1)
+                .Where(x => x.Count() > 1 && x.Key != "12345")
                 .Select(x => new
                 {
                     ProductId = x.Key
