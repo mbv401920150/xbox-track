@@ -136,7 +136,14 @@ else
             }
             <PropertyColumn Property="x => x.UsdPrice" CellClass="align-right" Title="USD Price" Format="N2"/>
             <PropertyColumn Property="x => x.Date" Title="Date" Format="MMM dd, yyyy"/>
-            <PropertyColumn Property="x => x.IsDuplicate" Title="Duplicate" />
+            @if (_mobileSize is false)
+            {
+                <PropertyColumn Property="x => x.IsDuplicate" Title="Duplicate">
+                    <CellTemplate>
+                        <MudCheckBox Value="@context.Item.IsDuplicate" Disabled="true"/>
+                    </CellTemplate>
+                </PropertyColumn>
+            }
         </Columns>
         <PagerContent>
             <MudDataGridPager T="XboxPurchaseHistory"/>
