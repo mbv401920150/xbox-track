@@ -175,6 +175,19 @@ public class XboxPurchaseService : IXboxPurchaseService
                 .ThenBy(x => x.Description)
                 .ToList();
 
+            var duplicateProducts = GeneralHistoryInfo
+                .GroupBy(x => x.ProductId)
+                .Where(x => x.Count() > 1)
+                .Select(x => new
+                {
+                    ProductId = x.Key
+                });
+            
+            GeneralHistoryInfo
+                .Where(x => duplicateProducts.Any(y => y.ProductId == x.ProductId))
+                .ToList()
+                .ForEach(x => x.IsDuplicate = true);
+            
             return GeneralHistoryInfo;
         }
         catch (Exception e)

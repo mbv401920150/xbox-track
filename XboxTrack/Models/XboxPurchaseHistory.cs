@@ -17,4 +17,5 @@ public record XboxPurchaseHistory
     public bool Completed { get; set; }
     public bool OnGoing { get; set; }
     public string? Notes { get; set; }
+    public bool IsDuplicate { get; set; }
 }
