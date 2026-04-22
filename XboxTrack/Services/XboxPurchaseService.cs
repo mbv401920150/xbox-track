@@ -175,19 +175,23 @@ public class XboxPurchaseService : IXboxPurchaseService
                 .ThenBy(x => x.Description)
                 .ToList();
 
+            var duplicateIdsWithoutImportance = new[] { "12345", "NOPRODUCTID" };
+
             var duplicateProducts = GeneralHistoryInfo
                 .GroupBy(x => x.ProductId)
-                .Where(x => x.Count() > 1 && x.Key != "12345")
+                .Where(x => x.Count() > 1 
+                            && string.IsNullOrEmpty(x.Key) is false 
+                            && duplicateIdsWithoutImportance.All(y => y != x.Key))
                 .Select(x => new
                 {
                     ProductId = x.Key
                 });
-            
+
             GeneralHistoryInfo
                 .Where(x => duplicateProducts.Any(y => y.ProductId == x.ProductId))
                 .ToList()
                 .ForEach(x => x.IsDuplicate = true);
-            
+
             return GeneralHistoryInfo;
         }
         catch (Exception e)
